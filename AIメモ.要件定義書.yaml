@@ -1,0 +1,168 @@
+project:
+  name: AIメモアシスタントアプリ
+  description: |
+    ユーザーがメモを作成・保存し、AI（Claude API）を使ってメモの要約や関連情報を生成するシンプルなWebアプリ。
+    Next.js、SQLite、Tailwind CSSを活用し、レスポンシブデザインを実現する。
+  version: 1.0.0
+  author: Ryo Nasu
+  date: 2025-03-28
+
+technical_stack:
+  frontend:
+    framework: Next.js
+    styling: Tailwind CSS
+  backend:
+    database: SQLite
+    api: Claude API
+  tools:
+    package_manager: npm
+    version_control: Git
+    deployment: Vercel
+
+stakeholders:
+  - role: Project Manager
+    name: John Doe
+  - role: Developer
+    name: Ryo Nasu
+  - role: Designer
+    name: Jane Smith
+  - role: Tester
+    name: Alice Brown
+
+schedule:
+  - phase: 要件定義
+    start_date: 2025-03-28
+    end_date: 2025-03-30
+  - phase: 開発
+    start_date: 2025-03-31
+    end_date: 2025-04-15
+  - phase: テスト
+    start_date: 2025-04-16
+    end_date: 2025-04-20
+  - phase: デプロイ
+    start_date: 2025-04-21
+    end_date: 2025-04-22
+
+features:
+  - メモの作成、編集、削除機能
+  - メモの一覧表示機能
+  - AIによるメモの要約生成機能
+  - APIキーの入力・保存機能
+  - APIキー未設定時の入力画面表示
+  - レスポンシブデザイン対応（Tailwind CSSを使用）
+
+functional_requirements:
+  - メモのCRUD操作を可能にする
+  - SQLiteを使用してメモデータを永続化する
+  - Claude APIを利用してメモの要約を生成する
+  - APIキーが未設定の場合、入力画面を表示する
+  - 入力されたAPIキーをセッションストレージまたはローカルストレージに保存する
+  - APIキーが無効な場合、エラーメッセージを表示する
+  - メモの一覧を最新順に表示する
+  - メモの詳細画面でAI要約を表示する
+
+non_functional_requirements:
+  - description: APIの応答時間は1秒以内を目標とする
+  - description: ページの初回読み込み時間は3秒以内を目標とする
+  - description: データベースはSQLiteからPostgreSQLに移行可能な設計とする
+  - description: APIキーはAES暗号化を使用して保存する
+  - description: SQLインジェクション対策を実施する
+  - description: HTTPSを使用して通信を暗号化する
+
+pages:
+  - path: "/"
+    description: |
+      APIキーが設定されている場合はメモの一覧ページを表示。
+      設定されていない場合はAPIキー入力画面を表示。
+  - path: "/memo/[id]"
+    description: メモの詳細ページ（AI要約を表示）
+  - path: "/memo/new"
+    description: 新しいメモを作成するページ
+  - path: "/memo/[id]/edit"
+    description: メモを編集するページ
+  - path: "/settings/api-key"
+    description: APIキーを入力・更新するページ
+
+api_endpoints:
+  - path: "/api/memos"
+    method: GET
+    description: メモの一覧を取得
+  - path: "/api/memos"
+    method: POST
+    description: 新しいメモを作成
+  - path: "/api/memos/[id]"
+    method: GET
+    description: 特定のメモを取得
+  - path: "/api/memos/[id]"
+    method: PUT
+    description: メモを更新
+  - path: "/api/memos/[id]"
+    method: DELETE
+    description: メモを削除
+  - path: "/api/memos/[id]/summary"
+    method: POST
+    description: Claude APIを利用してメモの要約を生成
+  - path: "/api/settings/api-key"
+    method: POST
+    description: APIキーを保存
+
+security:
+  - description: APIエンドポイントは適切なバリデーションとエラーハンドリングを実装する
+  - description: APIキーはAES暗号化を使用して保存する
+  - description: HTTPSを使用して通信を暗号化する
+
+testing:
+  - type: Unit Test
+    description: 各コンポーネントや関数の動作を検証
+  - type: Integration Test
+    description: フロントエンドとバックエンドの連携を検証
+  - type: E2E Test
+    description: ユーザー操作フローを検証
+  - environment: Local
+    description: 開発者のローカル環境でテストを実施
+  - environment: Staging
+    description: ステージング環境で統合テストを実施
+  - environment: CI/CD
+    description: GitHub Actionsを使用して自動テストを実施
+
+risks:
+  - risk: Claude APIの利用制限により、要約機能が停止する可能性
+    mitigation: 利用制限を超えないようにリクエスト数を制御する
+  - risk: SQLiteのスケーラビリティ不足
+    mitigation: データベースをPostgreSQLに移行可能な設計とする
+  - risk: ユーザーがAPIキーを紛失する
+    mitigation: 再入力を促すUIを提供する
+
+user_stories:
+  - id: US01
+    title: メモを作成する
+    description: ユーザーは新しいメモを作成し、保存できる
+    acceptance_criteria:
+      - メモのタイトルと内容を入力できる
+      - 保存ボタンを押すとメモがデータベースに保存される
+  - id: US02
+    title: AI要約を生成する
+    description: ユーザーはメモの要約をAIに生成させることができる
+    acceptance_criteria:
+      - メモ詳細画面で「要約を生成」ボタンを押すとAI要約が表示される
+      - APIキーが無効な場合、エラーメッセージが表示される
+
+ci_cd:
+  - tool: GitHub Actions
+    description: プッシュ時に自動テストとデプロイを実行
+  - tool: Vercel
+    description: ステージング環境と本番環境へのデプロイを管理
+
+deployment:
+  platform: Vercel
+  environment_variables:
+    - name: CLAUDE_API_KEY
+      description: Claude APIの認証キー
+    - name: DATABASE_URL
+      description: SQLiteデータベースのパス
+
+future_scope:
+  - メモにタグ付け機能を追加
+  - メモの検索機能を実装
+  - メモの共有機能を追加
+  - AIによるメモの感情分析機能を追加
